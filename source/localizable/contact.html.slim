@@ -4,6 +4,9 @@ billboard:
   title: 聯絡我們
 ---
 
+- content_for :body_append
+  script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSiECubRV5in23u01puFyYdHEIDPAF8Sk&callback=initMap" async="" defer=""
+
 = partial "components/billboard", locals: {text_only: true}
 
 .container--wrapper
