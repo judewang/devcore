@@ -18,6 +18,7 @@
 .container--wrapper {
   margin   : n() auto;
   padding  : n() r(1.5);
+  width    : 100%;
   max-width: $normal;
   @include desktop {
     padding: n() 0;
