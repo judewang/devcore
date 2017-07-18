@@ -7,14 +7,20 @@
   font-weight : bold;
   list-style  : none !important;
   @include desktop {
-     @include leader(-.75);
-    column-count: 2;
-    column-gap  : 1em;
+    @include leader(-.75);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
 }
 
 .table-of-contents__cell {
   margin-bottom: 0 !important;
+  @include desktop {
+    margin-top: rhythm(.5) !important;
+    width: calc(50% - 1em / 2);
+    line-height: 1.5;
+  }
 
   &::before {
     display: none !important;
@@ -22,8 +28,5 @@
 
   & + & {
     @include leader(.25);
-    @include desktop {
-      margin-top: 0;
-    }
   }
 }
