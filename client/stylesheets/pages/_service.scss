@@ -11,7 +11,6 @@
 }
 .service__title {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   @include rhythm-type(1);
   font-weight: 600;
@@ -24,12 +23,13 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    margin-left: r(1);
-    width: 50px;
+    margin-left: auto;
+    padding-left: r(1);
     color: $accent;
   }
   .to-top__text {
     @include rhythm-type(-2);
+    margin-right: r(.5);
     color: $secondary;
   }
 
