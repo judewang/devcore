@@ -143,6 +143,7 @@
       display: inline-block;
       bottom : r(1);
       outline: none;
+      text-align: center;
       @include scut-center-transform(x);
     }
   }
