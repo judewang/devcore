@@ -72,6 +72,7 @@
   @include rhythm-type(-1);
   @include desktop {
     margin-left: rhythm(.5);
+    @include adjust-font-size-to(14px);
   }
 }
 .lang-menu__label {color: $secondary;}
