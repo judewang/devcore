@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>滲透測試服務 Penetration Test — DEVCORE 戴夫寇爾</title><link href="/stylesheets/webpack_bundle.css" rel="stylesheet" /><meta content="DEVCORE 戴夫寇爾" property="og:title" />
+    <meta content="DEVCORE 戴夫寇爾" property="og:site_name" />
+    <meta content="http://core.dev/" property="og:url" />
+    <meta content="http://core.dev/images/fb.png" property="og:image" />
+    <meta content="戴夫寇爾以真實的滲透測試、顧問服務、教育訓練，保護你的商業價值。" property="og:description" />
+    <meta content="website" property="og:type" />
+    <meta content="612130717" property="fb:admins" />
+  </head>
+  <body class="services services_penetration-test zh">
+    <div class="page">
+      <div class="container--wrapper">
+        <div class="topbar">
+          <div class="topbar__brand">
+            <a href="/">
+                <div class="logo">
+                  DEVCORE 戴夫寇爾
+                </div></a>
+            <p class="slogan">
+              我們提供<a href="/services/penetration-test.html" class="link">滲透測試</a>、<a href="/services/security-consulting.html" class="link">資安顧問</a>與<a href="/services/security-training.html" class="link">教育訓練</a>專業服務
+            </p>
+          </div>
+          <div class="drawer" id="drawer">
+            <div class="drawer__container">
+              <nav class="main-menu">
+                <div class="hidden">
+                  主選單
+                </div>
+                <a href="/services/penetration-test.html" class="main-menu__link mobile-only">滲透測試</a>
+                <a href="/services/security-consulting.html" class="main-menu__link mobile-only">資安顧問</a>
+                <a href="/services/security-training.html" class="main-menu__link mobile-only">教育訓練</a>
+                <a href="/services/security-seal.html" class="main-menu__link mobile-only">網站安全標章</a><a href="/about.html" class="main-menu__link">駭客思維</a><a href="/blog/" class="main-menu__link">最新訊息</a><a href="/blog/search/" class="main-menu__link main-menu__search desktop-only"><span class="hidden">搜尋</span><svg class="icon-search icon"><use xlink:href="#icon-search" /></svg></a>
+              </nav>
+              <a href="/contact.html" class="drawer__contact button--dense">聯絡我們</a>
+              <nav class="lang-menu">
+                <div class="lang-menu__label">
+                  語言:
+                </div>
+                <a href="http://core.dev/" class="lang-menu__link">中文</a>
+                <a href="http://core.dev/en/" class="lang-menu__link">English</a>
+              </nav>
+            </div>
+          </div><span class="topbar__menu mobile-only">menu</span><button class="appearance-none topbar__hamburger mobile-only" data-toggle="#drawer" id="drawer-toggle" type="button">
+            <div class="bars">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <main role="main"><div class="container--wrapper">
+          <article class="article">
+            <section class="billboard">
+              <div class="billboard__image-wrapper">
+                <picture class="billboard__image"><source media="(min-width: 900px)" srcset="/images/pt-desktop-2e289b86.jpg" /><img src="/images/pt-mobile-0ce676c3.jpg" alt="Pt mobile" /></picture>
+              </div>
+              <div class="billboard__text-wrapper">
+                <p class="billboard__title">
+                  用最真實的攻擊，<br>驗證企業的防禦
+                </p>
+                <h1 class="billboard__sub-title">
+                  瞭解滲透測試
+                </h1>
+              </div>
+              <a class="billboard__forward" data-scroll="" href="#home-news-anchor">
+                <div class="text">
+                  最新訊息
+                </div>
+                <svg class="icon-angle-down icon"><use xlink:href="#icon-angle-down" /></svg></a>
+            </section><nav class="container">
+              <div class="heading--side-lined" id="table-of-contents">
+                目錄
+              </div>
+              <ul class="table-of-contents">
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-0" data-scroll="">滲透測試服務是什麼 ›</a>
+                </li>
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-1" data-scroll="">為何企業需要滲透測試服務 ›</a>
+                </li>
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-2" data-scroll="">滲透測試與弱點掃瞄有何差異 ›</a>
+                </li>
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-3" data-scroll="">自動測試與人工測試有何差異 ›</a>
+                </li>
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-4" data-scroll="">滲透測試有無相關規範 ›</a>
+                </li>
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-5" data-scroll="">滲透測試執行流程有哪些 ›</a>
+                </li>
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-6" data-scroll="">滲透測試執行結果是什麼 ›</a>
+                </li>
+                <li class="table-of-contents__cell">
+                  <a href="#service-content-7" data-scroll="">其他滲透測試常見問題 ›</a>
+                </li>
+              </ul>
+            </nav>
+            <section class="service container" id="service-content-0">
+              <h2 class="service__title">
+                <span class="text">滲透測試服務是什麼？</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <p>
+                滲透測試服務 (Penetration Test, PT) 是委請受信任的第三方專業資安團隊，從駭客的角度出發，模擬攻擊者的思考方式對企業進行各種入侵攻擊測試。
+              </p>
+              <p>
+                滲透測試執行期間，資安專家會以駭客思維嘗試入侵該企業的網站、網路系統、儲存設備等軟硬體，找出各種潛在的漏洞，以驗證企業的設備與資料是否可被破壞或竊取，同時也評估資訊系統與硬體的全盤架構，確認其安全性是否有待加強。
+              </p>
+              <p>
+                滲透測試結束後，專家會列出詳細的攻擊手法與步驟，提供完整的修補建議並輔導開發者修補漏洞，讓企業能儘速降低遭受入侵的風險。開發者修補完畢後，資安團隊會再次確認是否可使用其他手法繞過防護，以確保企業不會因為同樣的問題遭受損失。
+              </p>
+            </section>
+            <section class="service container" id="service-content-1">
+              <h2 class="service__title">
+                <span class="text">為何企業需要滲透測試服務？</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <p>
+                駭客攻擊就像生活中的病毒，隨時隨地都有可能接觸到並且遭受感染。而滲透測試如同健康檢查，若企業能定時執行深層的資安健檢，面對各種攻擊時即可提高存活的機率。
+              </p>
+              <p>
+                若您的企業、網站有機密外洩、個資外洩等疑慮，或是開發完畢的新系統需要上線，又或者開發中的系統需要做局部安全測試，都適合導入滲透測試進行安全檢測。
+              </p>
+              <p>
+                在面對網路上的眾多駭客之前，先行做好防禦措施，才能保證系統的每個環節都經得起駭客的挑戰，進而鞏固客戶對企業的信賴。
+              </p>
+            </section>
+            <section class="service container" id="service-content-2">
+              <h2 class="service__title">
+                <span class="text">滲透測試與弱點掃瞄有何差異？</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <p>
+                滲透測試需由經驗豐富的資安專家手動進行，測試過程中專家會利用不同的弱點進行組合式攻擊，驗證是否有任何方式可突破當前網站的防禦。滲透測試為求仔細，通常需要費時多天才能完成，因此耗費的人力成本較高。
+              </p>
+              <p>
+                弱點掃瞄可由自動化掃瞄軟體在較短的時間內執行完畢，因此時間與金錢成本相對較低。但是弱點掃瞄僅能檢測既有的漏洞，無法及時檢測出最新的資安漏洞並給予修補建議，同時對於弱點的誤判率也較高。目前滲透測試為求完整，通常已將弱點掃瞄包含在內。詳細的關係圖與比較表如下所示：
+              </p>
+              <figure>
+                <img src="http://devco.re/assets/themes/devcore/images/penetration-test-vs-vulnerability-assessment.png" alt="Penetration test vs vulnerability assessment" />
+              </figure>
+              <table class="vs-table">
+                <thead>
+                  <tr>
+                    <th class="vs-table__th">
+                      滲透測試 <span class="sub-title">Penetration Test</span>
+                    </th>
+                    <th class="vs-table__th">
+                      弱點掃瞄 <span class="sub-title">Vulnerability Assessment</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        執行方式
+                      </div>
+                      專業技術顧問手動進行
+                    </td>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        執行方式
+                      </div>
+                      自動化工具
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        門檻
+                      </div>
+                      高，測試者需要經驗與專業知識
+                    </td>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        門檻
+                      </div>
+                      低，工具安裝完畢即可執行
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        流量
+                      </div>
+                      低
+                    </td>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        流量
+                      </div>
+                      高
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        誤判率
+                      </div>
+                      低，專家可驗證該弱點之利用方式與價值
+                    </td>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        誤判率
+                      </div>
+                      高，工具無法確認該弱點是否可被利用
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        創造力
+                      </div>
+                      高，專家可能在檢測過程中找到無人發現的新弱點
+                    </td>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        創造力
+                      </div>
+                      低，僅能根據規則發現已知弱點
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        報告內容
+                      </div>
+                      專家會列出詳細攻擊手法，並提供客製化的專業修補建議
+                    </td>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        報告內容
+                      </div>
+                      僅陳列弱點報表，通常不包含修補建議
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        成本
+                      </div>
+                      高，通常金額是弱點掃瞄的數倍
+                    </td>
+                    <td class="vs-table__td">
+                      <div class="term">
+                        成本
+                      </div>
+                      低，有低價的商業工具或免費工具
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+            <section class="service container" id="service-content-3">
+              <h2 class="service__title">
+                <span class="text">自動測試與人工測試有何差異？</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <p>
+                自動測試與人工測試的差異主要有下列幾項：
+              </p>
+              <h3>
+                即時性
+              </h3>
+              <p>
+                自動測試的檢測規則需要定期更新，若軟體尚未更新或已過期，就無法檢測出最新的漏洞。在專家的人工測試之下，則不會有此狀況發生。
+              </p>
+              <h3>
+                準確率
+              </h3>
+              <p>
+                自動測試的結果通常有為數不少的誤報，因此需要有專家驗證滲透測試報告的內容。雖然某些滲透測試軟體的檢測準確率有一定水準，但通常其價格也較貴。而人工滲透測試所找出來的弱點都是 100% 確定可利用的，不會有誤報的狀況。
+              </p>
+              <h3>
+                檢測深度
+              </h3>
+              <p>
+                自動測試僅能依照既有規則對資訊系統進行檢測，無法將檢測到的弱點加以組合。而具備駭客思維的資安專家，則可利用多個弱點進行組合式攻擊，往往會發現能造成重大危害的潛在漏洞。
+              </p>
+              <h3>
+                商業邏輯判斷
+              </h3>
+              <p>
+                程式無法判斷邏輯漏洞。以下圖內容為例，網站會員在查詢自己的個人資料時，網址可能會帶有與帳號相關的參數（如圖 1），然而攻擊者可能會將網址的 id=101 改成圖 2 的 id=102，觀察網站是否會顯示其他使用者的個人資料。若能成功看到其他使用者的資料，則代表有邏輯漏洞。這類型的邏輯漏洞，只能靠人工的方式找出，而無法用自動化滲透測試工具掃瞄。
+              </p>
+              <figure>
+                <figcaption>圖 1：原始會員資料</figcaption><img src="http://devco.re/assets/themes/devcore/images/account.png" alt="Account" />
+              </figure>
+              <figure>
+                <figcaption>圖 2：駭客篡改 id 後得到其他使用者的個人資料</figcaption><img src="http://devco.re/assets/themes/devcore/images/revise-account.png" alt="Revise account" />
+              </figure>
+            </section>
+            <section class="service container" id="service-content-4">
+              <h2 class="service__title">
+                <span class="text">滲透測試有無相關規範？</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <p>
+                檢測的服務項目會包括網路掃瞄、弱點掃瞄、滲透測試三大層面，並且遵循下列國際標準：
+              </p>
+              <ul>
+                <li>
+                  <h3>
+                    OWASP (Open Web Application Security Project)
+                  </h3>
+                  <p>
+                    網站應用程式安全測試清單第三版<br /><a href="https://www.owasp.org/images/5/56/OWASP_Testing_Guide_v3.pdf" class="url">https://www.owasp.org/images/5/56/OWASP_Testing_Guide_v3.pdf</a>
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    OSSTMM (Open Source Security Testing Methodology Manual)
+                  </h3>
+                  <p>
+                    開源安全測試方法指南第三版<br /><a href="http://www.isecom.org/research/osstmm.html" class="url">http://www.isecom.org/research/osstmm.html</a>
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    NIST SP 800-115 (National Institute of Standards and Technology - Special Publication 800-115)
+                  </h3>
+                  <p>
+                    美國國家標準與技術研究院 - 資訊安全測試與評估指南<br /><a href="http://csrc.nist.gov/publications/nistpubs/800-115/SP800-115.pdf" class="url">http://csrc.nist.gov/publications/nistpubs/800-115/SP800-115.pdf</a>
+                  </p>
+                </li>
+              </ul>
+            </section>
+            <section class="service container" id="service-content-5">
+              <h2 class="service__title">
+                <span class="text">滲透測試執行流程有哪些？</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <h3>
+                確認專案需求
+              </h3>
+              <ol>
+                <li>
+                  啟動專案起始會議，瞭解客戶需求
+                </li>
+                <li>
+                  確認作業方式與執行規範
+                </li>
+                <li>
+                  簽署合約取得合法滲透授權
+                </li>
+              </ol>
+              <h3>
+                資訊蒐集與分析規劃
+              </h3>
+              <ol>
+                <li>
+                  蒐集該目標之公開資訊
+                </li>
+                <li>
+                  分析與規劃滲透方式（包含 OWASP 與 OSSTMM 等國際規範）
+                </li>
+                <li>
+                  準備對應之滲透測試工具與設備
+                </li>
+              </ol>
+              <h3>
+                執行滲透測試
+              </h3>
+              <ol>
+                <li>
+                  資料洩漏
+                  <ul>
+                    <li>
+                      測試是否有敏感資料或系統訊息洩漏
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  弱點測試
+                  <ul>
+                    <li>
+                      掃瞄該目標已知弱點
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  建立滲透途徑
+                  <ul>
+                    <li>
+                      配合已蒐集之資訊嘗試各項滲透方式
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  安全漏洞滲透
+                  <ul>
+                    <li>
+                      作業系統安全漏洞滲透
+                    </li>
+                    <li>
+                      應用軟體安全漏洞滲透
+                    </li>
+                    <li>
+                      網站邏輯漏洞滲透
+                    </li>
+                    <li>
+                      密碼破解
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  信任關係測試
+                  <ul>
+                    <li>
+                      測試主機間的信任關係
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  權限跳脫與提升
+                  <ul>
+                    <li>
+                      嘗試攻擊與擴張權限
+                    </li>
+                    <li>
+                      鎖定特定弱點之攻擊
+                    </li>
+                    <li>
+                      試圖取得系統更高權限
+                    </li>
+                    <li>
+                      撰寫客製化滲透工具攻擊特定弱點
+                    </li>
+                    <li>
+                      滲透內網其他主機（需取得客戶授權）
+                    </li>
+                  </ul>
+                </li>
+              </ol>
+              <h3>
+                滲透測試報告
+              </h3>
+              <ol>
+                <li>
+                  評估各弱點潛在威脅、損害程度
+                </li>
+                <li>
+                  撰寫各弱點修補方式
+                </li>
+                <li>
+                  遞交測試結果報告
+                </li>
+                <li>
+                  提供客戶弱點修正顧問諮詢
+                </li>
+                <li>
+                  擬定定期執行安全稽核計劃
+                </li>
+              </ol>
+              <h3>
+                簡報與文件交付
+              </h3>
+              <ol>
+                <li>
+                  針對專案結果進行簡報並交付相關文件
+                </li>
+              </ol>
+            </section>
+            <section class="service container" id="service-content-6">
+              <h2 class="service__title">
+                <span class="text">滲透測試執行結果是什麼？</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <p>
+                初次滲透測試執行完畢後，資安專家會依照所發現的漏洞評估災情，根據嚴重程度分級，詳細列出攻擊步驟，並給予完整的修復建議，輔導企業修補漏洞。待企業修補完畢後，資安專家會再次驗證該漏洞是否已正確修復，若發現能利用其他手法再次繞過，則會回報給企業，請開發者再次進行修補。執行結果報告內容可參考此下圖：
+              </p>
+              <figure>
+                <img src="http://devco.re/assets/themes/devcore/images/penetration-report-sample.jpg" alt="Penetration report sample" />
+              </figure>
+              <p>
+                若需要詳細的滲透測試報告範本，歡迎您來信索取。
+              </p>
+            </section>
+            <section class="service container" id="service-content-7">
+              <h2 class="service__title">
+                <span class="text">其他滲透測試常見問答</span><button class="appearance-none to-top" data-smooth="#table-of-contents"><span class="to-top__text">目錄</span><svg class="icon-arrow icon"><use xlink:href="#icon-arrow" /></svg></button>
+              </h2>
+              <ul>
+                <li>
+                  <h3>
+                    滲透測試有什麼前置作業嗎？
+                  </h3>
+                  <p>
+                    戴夫寇爾與委託者會溝通測試執行時間，基本上以上班時間為準，以便發現重大漏洞時可請企業開發人員及時修補。同時也會告知測試來源 IP，以便企業分辨測試來源是否合法，避免同時遭到入侵攻擊而未發覺。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    滲透測試需要多久的時間？
+                  </h3>
+                  <p>
+                    根據不同系統的規模大小而訂，通常單一網站從初測、修補到複測，至少需要一個月的時間。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    滲透測試包含社交工程與 DDoS 嗎？
+                  </h3>
+                  <p>
+                    為避免影響企業正常營運，除非客戶特別要求，否則戴夫寇爾的滲透測試不會包含社交工程與 DDoS。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    滲透測試過程中會不會影響我的其他主機？
+                  </h3>
+                  <p>
+                    若無取得合法授權，戴夫寇爾不會對授權目標之外的主機進行檢測。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    滲透測試所取得之資訊是否容易外洩？
+                  </h3>
+                  <p>
+                    戴夫寇爾資安專家皆具備高度企業倫理與道德，不會將測試資訊以任何資訊傳遞給第三方。測試過程中之資料傳遞也會以高強度的密碼加密傳輸，以確保資料的安全性。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    滲透測試執行完畢後就可以高枕無憂？
+                  </h3>
+                  <p>
+                    駭客攻擊手法層出不窮，即使網站不進行任何更動，也難以保證未來不會被新的攻擊方式入侵。並且一般商務網站也不可能永遠不開發新功能，因此仍建議每年定期執行滲透測試。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    滲透測試該多久執行一次？
+                  </h3>
+                  <p>
+                    金管會規定銀行體系之網站必須一年執行兩次滲透測試，而一般的企業網站或網路服務則建議每年至少執行一次滲透測試。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    可以委託戴夫寇爾測試其他企業的網站嗎？
+                  </h3>
+                  <p>
+                    滲透測試會觸及企業的敏感資訊，必須取得合法的授權後才能進行測試，因此僅能接受該網站的擁有者或所屬企業委託測試。
+                  </p>
+                </li>
+                <li>
+                  <h3>
+                    執行滲透測試的廠商需要特定資格嗎？
+                  </h3>
+                  <p>
+                    目前並無相關法規，但購買滲透測試服務前最好確認廠商是否真的有能力可提供高品質的服務，例如廠商是否曾揭露大型軟體、網路服務的漏洞、廠商是否曾在各大研討會發表資安技術等，以避免廠商僅擁有軟體。
+                  </p>
+                </li>
+              </ul>
+            </section>
+          </article>
+        </div></main>
+      <div class="container--wrapper">
+        <div class="relative-posts">
+          <div class="heading--side-lined container">
+            相關文章
+          </div>
+          <div class="relative-posts__cells">
+            <section class="card">
+              <a href="/blog/2016/04/21/how-I-hacked-facebook-and-found-someones-backdoor-script.html">
+                <div class="card__thumbnail" style="background-image: url(/images/blog-thumbnail-0-98e2cb44.jpg)"></div>
+                <h3 class="card__title">
+                  WEB2PY 反序列化的安全問題－CVE-2016-3957
+                </h3></a>
+              <div class="card__tags">
+                <a href="#link" class="card__tag">Advisory</a>
+                <a href="#link" class="card__tag">Facebook</a>
+                <a href="#link" class="card__tag">BugBounty</a>
+                <a href="#link" class="card__tag">RCE</a>
+                <a href="#link" class="card__tag">CVE</a>
+              </div>
+              <small class="card__category"><a href="#link">技術專欄</a></small>
+            </section>
+            <section class="card">
+              <a href="/blog/2014/10/13/android-webview-left-shortcuts-for-hacker.html">
+                <div class="card__thumbnail" style="background-image: url(/images/blog-thumbnail-1-95c2e1f4.jpg)"></div>
+                <h3 class="card__title">
+                  IoT設備商別成為幫兇 從Dyn DDoS攻擊事件看IoT安全
+                </h3></a>
+              <div class="card__tags">
+                <a href="#link" class="card__tag">Mobile</a>
+                <a href="#link" class="card__tag">Android</a>
+                <a href="#link" class="card__tag">WebView</a>
+                <a href="#link" class="card__tag">UXSS</a>
+              </div>
+              <small class="card__category"><a href="#link">技術專欄</a></small>
+            </section>
+            <section class="card">
+              <a href="/blog/2016/09/22/advisory-accellion-file-transfer-appliance-vulnerability-eng-ver.html">
+                <div class="card__thumbnail" style="background-image: url(/images/blog-thumbnail-2-a989726c.jpg)"></div>
+                <h3 class="card__title">
+                  Accellion File Transfer Appliance 弱點報告
+                </h3></a>
+              <div class="card__tags">
+                <a href="#link" class="card__tag">Facebook</a>
+                <a href="#link" class="card__tag">BugBounty</a>
+                <a href="#link" class="card__tag">RCE</a>
+                <a href="#link" class="card__tag">Backdoor</a>
+                <a href="#link" class="card__tag">Reconnaissance</a>
+                <a href="#link" class="card__tag">Pentest</a>
+              </div>
+              <small class="card__category"><a href="#link">技術專欄</a></small>
+            </section>
+          </div>
+        </div><div class="contact-section container">
+          <h2 class="contact-section__title">
+            用最真實的攻擊，驗證企業的防禦
+          </h2>
+          <a href="/contact.html" class="home-contact__button button--dense">聯絡我們</a>
+        </div><footer class="main-footer">
+          <div class="main-footer__about">
+            戴夫寇爾提供<br class="mobile-only" /><a href="/services/penetration-test.html" class="link">滲透測試</a>、<a href="/services/security-consulting.html" class="link">資安顧問</a>與<a href="/services/security-training.html" class="link">教育訓練</a>專業服務<br />在<a href="https://www.facebook.com/D3VC0RE" class="link">Facebook</a>或<a href="https://twitter.com/d3vc0r3" class="link">Twitter</a>上追蹤我們的<a href="/blog/" class="link">最新訊息</a><br />瞭解更多戴夫寇爾的<a href="/about.html" class="link">駭客思維</a>
+          </div>
+          <div class="main-footer__snses"><a href="https://www.facebook.com/D3VC0RE" class="main-footer__sns">
+                <svg class="icon-fb icon"><use xlink:href="#icon-fb" /></svg></a><a href="https://plus.google.com/118439315679478709768/posts" class="main-footer__sns">
+                <svg class="icon-googleplus icon"><use xlink:href="#icon-googleplus" /></svg></a><a href="https://twitter.com/d3vc0r3" class="main-footer__sns">
+                <svg class="icon-twitter icon"><use xlink:href="#icon-twitter" /></svg></a>
+          </div>
+          <address class="main-footer__address">
+            <ul class="list--unstyled">
+              <li>
+                地址 10487 台北市中山區復興北路168號10樓
+              </li>
+              <li>
+                Email contact@devco.re
+              </li>
+              <li>
+                電話 02-2718-0156
+              </li>
+              <li>
+                統編 53955237
+              </li>
+            </ul>
+          </address><small class="main-footer__copyright"><a href="/" class="logo">DEVCORE</a>©2016 DEVCORE 戴夫寇爾</small>
+        </footer>
+      </div>
+    </div>
+    <script src="/javascripts/webpack_bundle.js"></script>
+  </body>
+</html>

